@@ -1,0 +1,628 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#126B45">
+<title>MboaBiz 0.5</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ font-family:Arial,sans-serif;
+ background:#F4F7F5;
+ color:#202B25;
+ padding:18px;
+ padding-bottom:40px;
+}
+
+header{margin-bottom:22px}
+.logo{font-size:28px;font-weight:bold;color:#126B45}
+.subtitle{color:#777;margin-top:5px}
+
+.card{
+ background:white;
+ padding:17px;
+ border-radius:14px;
+ margin-bottom:13px;
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+
+.stats h2{
+ color:#126B45;
+ font-size:19px;
+ margin-top:10px;
+}
+
+h3{margin:23px 0 13px}
+
+input,select{
+ width:100%;
+ padding:14px;
+ margin:8px 0 14px;
+ border:1px solid #ddd;
+ border-radius:9px;
+ font-size:16px;
+ background:white;
+}
+
+label{
+ font-size:14px;
+ font-weight:bold;
+}
+
+button{
+ border:0;
+ border-radius:10px;
+ padding:14px;
+ background:#126B45;
+ color:white;
+ font-weight:bold;
+ font-size:15px;
+ cursor:pointer;
+}
+
+.full{width:100%}
+
+.tabs{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:7px;
+ margin:23px 0;
+}
+
+.tabs button{
+ background:#ddd;
+ color:#333;
+ font-size:13px;
+ padding:13px 5px;
+}
+
+.tabs button.active{
+ background:#126B45;
+ color:white;
+}
+
+.section{display:none}
+.section.active{display:block}
+
+.product,.sale{
+ background:white;
+ padding:16px;
+ border-radius:12px;
+ margin-bottom:12px;
+}
+
+.product p,.sale p{
+ color:#666;
+ font-size:14px;
+ margin-top:8px;
+ line-height:1.5;
+}
+
+.delete{
+ background:#C0392B;
+ margin-top:12px;
+}
+
+.empty{
+ text-align:center;
+ color:#888;
+ padding:22px;
+}
+
+.total-box{
+ background:#E7F4EC;
+ padding:16px;
+ border-radius:10px;
+ margin:12px 0;
+}
+
+.total-box strong{
+ color:#126B45;
+ font-size:23px;
+}
+
+.status{
+ color:#126B45;
+ font-size:14px;
+ margin-top:10px;
+}
+
+small{color:inherit}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">MboaBiz 🏪</div>
+ <div class="subtitle">Ton commerce, mieux organisé.</div>
+</header>
+
+<div class="card" style="background:#126B45;color:white">
+ <small>Chiffre d'affaires total</small>
+ <h1 id="revenue" style="margin-top:12px">0 FCFA</h1>
+</div>
+
+<h3>Tableau de bord</h3>
+
+<div class="stats">
+
+ <div class="card">
+  📦 Produits
+  <h2 id="productCount">0</h2>
+ </div>
+
+ <div class="card">
+  🛒 Ventes
+  <h2 id="saleCount">0</h2>
+ </div>
+
+ <div class="card">
+  💰 Bénéfice brut
+  <h2 id="profit">0 F</h2>
+ </div>
+
+ <div class="card">
+  ⚠️ Stock faible
+  <h2 id="lowStock">0</h2>
+ </div>
+
+</div>
+
+<div class="tabs">
+
+ <button class="active"
+ onclick="showSection('products',this)">
+ Produits
+ </button>
+
+ <button onclick="showSection('sales',this)">
+ Ventes
+ </button>
+
+ <button onclick="showSection('history',this)">
+ Historique
+ </button>
+
+</div>
+
+<!-- PRODUITS -->
+
+<div id="products" class="section active">
+
+ <h3>Ajouter un produit</h3>
+
+ <div class="card">
+
+  <form id="productForm">
+
+   <label>Nom du produit</label>
+   <input id="name" required placeholder="Ex : T-shirt">
+
+   <label>Prix d'achat (FCFA)</label>
+   <input id="buyPrice" type="number" min="0" step="1" required>
+
+   <label>Prix de vente (FCFA)</label>
+   <input id="sellPrice" type="number" min="0" step="1" required>
+
+   <label>Quantité disponible</label>
+   <input id="quantity" type="number" min="0" step="1" required>
+
+   <button class="full" type="submit">
+    ENREGISTRER LE PRODUIT
+   </button>
+
+  </form>
+
+  <p id="productStatus" class="status"></p>
+
+ </div>
+
+ <h3>Mon catalogue</h3>
+
+ <div id="productList"></div>
+
+</div>
+
+<!-- VENTES -->
+
+<div id="sales" class="section">
+
+ <h3>Nouvelle vente</h3>
+
+ <div class="card">
+
+  <form id="saleForm">
+
+   <label>Choisir un produit</label>
+
+   <select id="saleProduct" required>
+    <option value="">Sélectionner un produit</option>
+   </select>
+
+   <label>Quantité à vendre</label>
+
+   <input id="saleQuantity"
+    type="number" min="1" step="1" value="1" required>
+
+   <div class="total-box">
+
+    <p>Total à payer</p>
+
+    <strong id="saleTotal">0 FCFA</strong>
+
+   </div>
+
+   <button class="full" type="submit">
+    CONFIRMER LA VENTE
+   </button>
+
+  </form>
+
+  <p id="saleStatus" class="status"></p>
+
+ </div>
+
+</div>
+
+<!-- HISTORIQUE -->
+
+<div id="history" class="section">
+
+ <h3>Historique des ventes</h3>
+
+ <div id="saleHistory"></div>
+
+</div>
+
+<script>
+
+// DONNEES TEMPORAIRES
+// Elles restent disponibles pendant cette session.
+
+let products=[];
+let sales=[];
+
+// FORMATAGE FCFA
+
+function money(value){
+ return Math.round(value).toLocaleString("fr-FR")+" FCFA";
+}
+
+// NAVIGATION
+
+function showSection(id,button){
+
+ document.querySelectorAll(".section").forEach(s=>{
+  s.classList.remove("active");
+ });
+
+ document.querySelectorAll(".tabs button").forEach(b=>{
+  b.classList.remove("active");
+ });
+
+ document.getElementById(id).classList.add("active");
+ button.classList.add("active");
+
+ if(id==="sales") updateSaleOptions();
+ if(id==="history") renderHistory();
+}
+
+// AJOUT PRODUIT
+
+document.getElementById("productForm")
+.addEventListener("submit",function(e){
+
+ e.preventDefault();
+
+ const name=document.getElementById("name").value.trim();
+ const buy=Number(document.getElementById("buyPrice").value);
+ const sell=Number(document.getElementById("sellPrice").value);
+ const quantity=Number(document.getElementById("quantity").value);
+
+ if(!name ||
+ !Number.isSafeInteger(buy) ||
+ !Number.isSafeInteger(sell) ||
+ !Number.isSafeInteger(quantity) ||
+ buy<0 || sell<0 || quantity<0){
+
+  document.getElementById("productStatus").textContent=
+   "Vérifie les informations saisies.";
+
+  return;
+ }
+
+ products.push({
+  id:Date.now()+Math.random(),
+  name:name,
+  buyPrice:buy,
+  sellPrice:sell,
+  quantity:quantity
+ });
+
+ renderProducts();
+ updateSaleOptions();
+
+ this.reset();
+
+ document.getElementById("productStatus").textContent=
+  "Produit enregistré avec succès !";
+
+});
+
+// SUPPRIMER PRODUIT
+
+function deleteProduct(id){
+
+ const used=sales.some(s=>
+  s.productId===id
+ );
+
+ if(used){
+  alert("Impossible de supprimer un produit ayant des ventes enregistrées.");
+  return;
+ }
+
+ if(!confirm("Supprimer ce produit ?"))return;
+
+ products=products.filter(p=>p.id!==id);
+
+ renderProducts();
+ updateSaleOptions();
+}
+
+// AFFICHER PRODUITS
+
+function renderProducts(){
+
+ const list=document.getElementById("productList");
+ list.innerHTML="";
+
+ if(products.length===0){
+  list.innerHTML='<div class="empty">Aucun produit enregistré.</div>';
+ }
+
+ products.forEach(p=>{
+
+  const item=document.createElement("div");
+  item.className="product";
+
+  const title=document.createElement("strong");
+  title.textContent=p.name;
+
+  const details=document.createElement("p");
+  details.textContent=
+   "Achat : "+money(p.buyPrice)+
+   " | Vente : "+money(p.sellPrice)+
+   " | Stock : "+p.quantity;
+
+  const button=document.createElement("button");
+  button.className="delete";
+  button.textContent="Supprimer";
+  button.onclick=()=>deleteProduct(p.id);
+
+  item.append(title,details,button);
+  list.appendChild(item);
+
+ });
+
+ updateDashboard();
+
+}
+
+// LISTE DES PRODUITS POUR VENTE
+
+function updateSaleOptions(){
+
+ const select=document.getElementById("saleProduct");
+ const previous=select.value;
+
+ select.innerHTML=
+  '<option value="">Sélectionner un produit</option>';
+
+ products.filter(p=>p.quantity>0).forEach(p=>{
+
+  const option=document.createElement("option");
+
+  option.value=String(p.id);
+
+  option.textContent=
+   p.name+" - "+money(p.sellPrice)+
+   " (Stock : "+p.quantity+")";
+
+  select.appendChild(option);
+
+ });
+
+ if(products.some(p=>String(p.id)===previous && p.quantity>0)){
+  select.value=previous;
+ }
+
+ updateSaleTotal();
+
+}
+
+// CALCUL DU TOTAL
+
+function updateSaleTotal(){
+
+ const id=document.getElementById("saleProduct").value;
+
+ const quantity=Number(
+  document.getElementById("saleQuantity").value
+ );
+
+ const product=products.find(p=>String(p.id)===id);
+
+ let total=0;
+
+ if(product &&
+ Number.isSafeInteger(quantity) &&
+ quantity>0 &&
+ quantity<=product.quantity){
+
+  total=product.sellPrice*quantity;
+
+ }
+
+ document.getElementById("saleTotal").textContent=money(total);
+
+}
+
+document.getElementById("saleProduct")
+.addEventListener("change",updateSaleTotal);
+
+document.getElementById("saleQuantity")
+.addEventListener("input",updateSaleTotal);
+
+// ENREGISTRER VENTE
+
+document.getElementById("saleForm")
+.addEventListener("submit",function(e){
+
+ e.preventDefault();
+
+ const id=document.getElementById("saleProduct").value;
+
+ const quantity=Number(
+  document.getElementById("saleQuantity").value
+ );
+
+ const product=products.find(p=>String(p.id)===id);
+
+ const status=document.getElementById("saleStatus");
+
+ if(!product){
+  status.textContent="Sélectionne un produit.";
+  return;
+ }
+
+ if(!Number.isSafeInteger(quantity)||quantity<1){
+  status.textContent="Quantité invalide.";
+  return;
+ }
+
+ if(quantity>product.quantity){
+  status.textContent="Stock insuffisant !";
+  return;
+ }
+
+ const total=product.sellPrice*quantity;
+ const cost=product.buyPrice*quantity;
+
+ if(!Number.isSafeInteger(total)||!Number.isSafeInteger(cost)){
+  status.textContent="Montant trop élevé.";
+  return;
+ }
+
+ // CREATION DE LA VENTE
+
+ const sale={
+  id:Date.now()+Math.random(),
+  productId:product.id,
+  productName:product.name,
+  quantity:quantity,
+  unitPrice:product.sellPrice,
+  unitCost:product.buyPrice,
+  total:total,
+  cost:cost,
+  profit:total-cost,
+  date:new Date().toISOString()
+ };
+
+ // MISE A JOUR
+
+ sales.push(sale);
+
+ product.quantity-=quantity;
+
+ renderProducts();
+ updateSaleOptions();
+ renderHistory();
+ updateDashboard();
+
+ this.reset();
+
+ updateSaleTotal();
+
+ status.textContent="Vente enregistrée avec succès !";
+
+});
+
+// HISTORIQUE DES VENTES
+
+function renderHistory(){
+
+ const list=document.getElementById("saleHistory");
+ list.innerHTML="";
+
+ if(sales.length===0){
+  list.innerHTML='<div class="empty">Aucune vente enregistrée.</div>';
+  return;
+ }
+
+ [...sales].reverse().forEach(s=>{
+
+  const item=document.createElement("div");
+  item.className="sale";
+
+  const title=document.createElement("strong");
+
+  title.textContent=s.productName+" × "+s.quantity;
+
+  const details=document.createElement("p");
+
+  details.textContent=
+   new Date(s.date).toLocaleString("fr-FR")+
+   " | Total : "+money(s.total)+
+   " | Bénéfice brut : "+money(s.profit);
+
+  item.append(title,details);
+
+  list.appendChild(item);
+
+ });
+
+}
+
+// TABLEAU DE BORD
+
+function updateDashboard(){
+
+ const revenue=sales.reduce((sum,s)=>sum+s.total,0);
+
+ const profit=sales.reduce((sum,s)=>sum+s.profit,0);
+
+ document.getElementById("revenue").textContent=money(revenue);
+
+ document.getElementById("productCount").textContent=products.length;
+
+ document.getElementById("saleCount").textContent=sales.length;
+
+ document.getElementById("profit").textContent=money(profit);
+
+ document.getElementById("lowStock").textContent=
+  products.filter(p=>p.quantity<=5).length;
+
+}
+
+// INITIALISATION
+
+renderProducts();
+updateSaleOptions();
+renderHistory();
+updateDashboard();
+
+</script>
+
+</body>
+</html>
