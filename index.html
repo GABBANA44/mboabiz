@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#126B45">
-<title>MboaBiz 0.5</title>
+<title>MboaBiz 0.6</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -22,7 +22,7 @@ header{margin-bottom:22px}
 .logo{font-size:28px;font-weight:bold;color:#126B45}
 .subtitle{color:#777;margin-top:5px}
 
-.card{
+.card,.product,.sale{
  background:white;
  padding:17px;
  border-radius:14px;
@@ -69,6 +69,7 @@ button{
  cursor:pointer;
 }
 
+button:disabled{opacity:.5}
 .full{width:100%}
 
 .tabs{
@@ -93,24 +94,16 @@ button{
 .section{display:none}
 .section.active{display:block}
 
-.product,.sale{
- background:white;
- padding:16px;
- border-radius:12px;
- margin-bottom:12px;
-}
-
 .product p,.sale p{
  color:#666;
  font-size:14px;
  margin-top:8px;
- line-height:1.5;
+ line-height:1.6;
 }
 
-.delete{
- background:#C0392B;
- margin-top:12px;
-}
+.delete{background:#C0392B;margin-top:12px}
+.secondary{background:#425466}
+.danger{background:#C0392B}
 
 .empty{
  text-align:center;
@@ -136,7 +129,27 @@ button{
  margin-top:10px;
 }
 
-small{color:inherit}
+.backup-box{
+ background:#E7F4EC;
+ padding:16px;
+ border-radius:12px;
+ margin-bottom:15px;
+}
+
+.backup-box p{
+ font-size:14px;
+ line-height:1.5;
+ margin-top:8px;
+}
+
+#backupFile{font-size:13px}
+
+footer{
+ text-align:center;
+ color:#888;
+ font-size:12px;
+ margin-top:30px;
+}
 </style>
 </head>
 
@@ -168,7 +181,7 @@ small{color:inherit}
 
  <div class="card">
   💰 Bénéfice brut
-  <h2 id="profit">0 F</h2>
+  <h2 id="profit">0 FCFA</h2>
  </div>
 
  <div class="card">
@@ -228,7 +241,6 @@ small{color:inherit}
  </div>
 
  <h3>Mon catalogue</h3>
-
  <div id="productList"></div>
 
 </div>
@@ -255,11 +267,8 @@ small{color:inherit}
     type="number" min="1" step="1" value="1" required>
 
    <div class="total-box">
-
     <p>Total à payer</p>
-
     <strong id="saleTotal">0 FCFA</strong>
-
    </div>
 
    <button class="full" type="submit">
@@ -271,7 +280,6 @@ small{color:inherit}
   <p id="saleStatus" class="status"></p>
 
  </div>
-
 </div>
 
 <!-- HISTORIQUE -->
@@ -279,26 +287,189 @@ small{color:inherit}
 <div id="history" class="section">
 
  <h3>Historique des ventes</h3>
-
  <div id="saleHistory"></div>
 
 </div>
 
+<!-- SAUVEGARDE -->
+
+<h3>Sauvegarde et données</h3>
+
+<div class="card">
+
+ <div class="backup-box">
+  <strong>💾 Sauvegarde automatique</strong>
+  <p id="storageStatus">
+   Vérification du stockage...
+  </p>
+ </div>
+
+ <button class="full" onclick="exportBackup()">
+  TÉLÉCHARGER MA SAUVEGARDE
+ </button>
+
+ <h3>Restaurer une sauvegarde</h3>
+
+ <p style="font-size:14px;color:#666;line-height:1.5">
+  Sélectionne un fichier de sauvegarde MboaBiz au format JSON.
+  La restauration remplacera les données actuellement enregistrées.
+ </p>
+
+ <input id="backupFile" type="file" accept=".json,application/json">
+
+ <button class="full secondary" onclick="importBackup()">
+  RESTAURER MES DONNÉES
+ </button>
+
+ <p id="backupStatus" class="status"></p>
+
+</div>
+
+<footer>
+ MboaBiz 0.6 - Gestion commerciale au Cameroun 🇨🇲
+</footer>
+
 <script>
 
-// DONNEES TEMPORAIRES
-// Elles restent disponibles pendant cette session.
+// ==============================
+// STOCKAGE PERMANENT
+// ==============================
+
+const STORAGE_KEY="mboabiz_v06_data";
 
 let products=[];
 let sales=[];
+let storageAvailable=false;
 
-// FORMATAGE FCFA
+function saveData(){
 
-function money(value){
- return Math.round(value).toLocaleString("fr-FR")+" FCFA";
+ try{
+
+  const data={
+   version:1,
+   products:products,
+   sales:sales
+  };
+
+  localStorage.setItem(
+   STORAGE_KEY,
+   JSON.stringify(data)
+  );
+
+  storageAvailable=true;
+
+  document.getElementById("storageStatus").textContent=
+   "Sauvegarde automatique active sur cet appareil.";
+
+  return true;
+
+ }catch(error){
+
+  storageAvailable=false;
+
+  document.getElementById("storageStatus").textContent=
+   "Erreur de sauvegarde : "+error.message+
+   ". Télécharge régulièrement une sauvegarde.";
+
+  return false;
+
+ }
+
 }
 
-// NAVIGATION
+// ==============================
+// CHARGEMENT DES DONNEES
+// ==============================
+
+function validProduct(p){
+
+ return p &&
+ typeof p.name==="string" &&
+ p.name.trim().length>0 &&
+ Number.isSafeInteger(p.buyPrice) &&
+ Number.isSafeInteger(p.sellPrice) &&
+ Number.isSafeInteger(p.quantity) &&
+ p.buyPrice>=0 &&
+ p.sellPrice>=0 &&
+ p.quantity>=0 &&
+ (typeof p.id==="number" || typeof p.id==="string");
+
+}
+
+function validSale(s){
+
+ return s &&
+ typeof s.productName==="string" &&
+ Number.isSafeInteger(s.quantity) &&
+ Number.isSafeInteger(s.unitPrice) &&
+ Number.isSafeInteger(s.unitCost) &&
+ Number.isSafeInteger(s.total) &&
+ Number.isSafeInteger(s.cost) &&
+ Number.isSafeInteger(s.profit) &&
+ s.quantity>0 &&
+ s.unitPrice>=0 &&
+ s.unitCost>=0 &&
+ s.total===s.unitPrice*s.quantity &&
+ s.cost===s.unitCost*s.quantity &&
+ s.profit===s.total-s.cost &&
+ typeof s.date==="string";
+
+}
+
+function loadData(){
+
+ try{
+
+  const raw=localStorage.getItem(STORAGE_KEY);
+
+  if(!raw){
+   products=[];
+   sales=[];
+   storageAvailable=true;
+   saveData();
+   return;
+  }
+
+  const data=JSON.parse(raw);
+
+  if(
+   !data ||
+   data.version!==1 ||
+   !Array.isArray(data.products) ||
+   !Array.isArray(data.sales) ||
+   !data.products.every(validProduct) ||
+   !data.sales.every(validSale)
+  ){
+   throw new Error("Format de sauvegarde invalide.");
+  }
+
+  products=data.products;
+  sales=data.sales;
+  storageAvailable=true;
+
+ }catch(error){
+
+  products=[];
+  sales=[];
+  storageAvailable=false;
+
+  document.getElementById("storageStatus").textContent=
+   "Impossible de charger les données : "+error.message+
+   ". Ne saisis pas de nouvelles données avant vérification.";
+
+ }
+
+}
+
+// ==============================
+// OUTILS
+// ==============================
+
+function money(value){
+
+ return Math.round(value).toLocaleString("fr-FR")+" FCFA";
+
+}
 
 function showSection(id,button){
 
@@ -313,11 +484,14 @@ function showSection(id,button){
  document.getElementById(id).classList.add("active");
  button.classList.add("active");
 
- if(id==="sales") updateSaleOptions();
- if(id==="history") renderHistory();
+ if(id==="sales")updateSaleOptions();
+ if(id==="history")renderHistory();
+
 }
 
+// ==============================
 // AJOUT PRODUIT
+// ==============================
 
 document.getElementById("productForm")
 .addEventListener("submit",function(e){
@@ -329,58 +503,81 @@ document.getElementById("productForm")
  const sell=Number(document.getElementById("sellPrice").value);
  const quantity=Number(document.getElementById("quantity").value);
 
+ const status=document.getElementById("productStatus");
+
+ if(!storageAvailable){
+  status.textContent="Stockage indisponible. Aucune modification effectuée.";
+  return;
+ }
+
  if(!name ||
  !Number.isSafeInteger(buy) ||
  !Number.isSafeInteger(sell) ||
  !Number.isSafeInteger(quantity) ||
  buy<0 || sell<0 || quantity<0){
 
-  document.getElementById("productStatus").textContent=
-   "Vérifie les informations saisies.";
-
+  status.textContent="Vérifie les informations saisies.";
   return;
  }
 
- products.push({
+ const product={
   id:Date.now()+Math.random(),
   name:name,
   buyPrice:buy,
   sellPrice:sell,
   quantity:quantity
- });
+ };
+
+ products.push(product);
+
+ if(!saveData()){
+  products.pop();
+  status.textContent="Sauvegarde impossible. Produit non ajouté.";
+  return;
+ }
 
  renderProducts();
  updateSaleOptions();
-
  this.reset();
 
- document.getElementById("productStatus").textContent=
-  "Produit enregistré avec succès !";
+ status.textContent="Produit enregistré et sauvegardé !";
 
 });
 
-// SUPPRIMER PRODUIT
+// ==============================
+// SUPPRESSION PRODUIT
+// ==============================
 
 function deleteProduct(id){
 
- const used=sales.some(s=>
-  s.productId===id
- );
+ if(!storageAvailable)return;
+
+ const used=sales.some(s=>s.productId===id);
 
  if(used){
-  alert("Impossible de supprimer un produit ayant des ventes enregistrées.");
+  alert("Impossible de supprimer un produit ayant des ventes.");
   return;
  }
 
  if(!confirm("Supprimer ce produit ?"))return;
 
+ const oldProducts=products;
+
  products=products.filter(p=>p.id!==id);
+
+ if(!saveData()){
+  products=oldProducts;
+  alert("Suppression non sauvegardée.");
+ }
 
  renderProducts();
  updateSaleOptions();
+
 }
 
-// AFFICHER PRODUITS
+// ==============================
+// AFFICHAGE PRODUITS
+// ==============================
 
 function renderProducts(){
 
@@ -388,7 +585,10 @@ function renderProducts(){
  list.innerHTML="";
 
  if(products.length===0){
-  list.innerHTML='<div class="empty">Aucun produit enregistré.</div>';
+
+  list.innerHTML=
+   '<div class="empty">Aucun produit enregistré.</div>';
+
  }
 
  products.forEach(p=>{
@@ -400,6 +600,7 @@ function renderProducts(){
   title.textContent=p.name;
 
   const details=document.createElement("p");
+
   details.textContent=
    "Achat : "+money(p.buyPrice)+
    " | Vente : "+money(p.sellPrice)+
@@ -419,7 +620,9 @@ function renderProducts(){
 
 }
 
-// LISTE DES PRODUITS POUR VENTE
+// ==============================
+// LISTE DES VENTES
+// ==============================
 
 function updateSaleOptions(){
 
@@ -451,7 +654,9 @@ function updateSaleOptions(){
 
 }
 
-// CALCUL DU TOTAL
+// ==============================
+// CALCUL VENTE
+// ==============================
 
 function updateSaleTotal(){
 
@@ -484,22 +689,27 @@ document.getElementById("saleProduct")
 document.getElementById("saleQuantity")
 .addEventListener("input",updateSaleTotal);
 
+// ==============================
 // ENREGISTRER VENTE
+// ==============================
 
 document.getElementById("saleForm")
 .addEventListener("submit",function(e){
 
  e.preventDefault();
 
- const id=document.getElementById("saleProduct").value;
+ const status=document.getElementById("saleStatus");
 
- const quantity=Number(
-  document.getElementById("saleQuantity").value
- );
+ if(!storageAvailable){
+  status.textContent="Stockage indisponible. Vente non enregistrée.";
+  return;
+ }
+
+ const id=this.elements.saleProduct.value;
+
+ const quantity=Number(this.elements.saleQuantity.value);
 
  const product=products.find(p=>String(p.id)===id);
-
- const status=document.getElementById("saleStatus");
 
  if(!product){
   status.textContent="Sélectionne un produit.";
@@ -524,8 +734,6 @@ document.getElementById("saleForm")
   return;
  }
 
- // CREATION DE LA VENTE
-
  const sale={
   id:Date.now()+Math.random(),
   productId:product.id,
@@ -539,11 +747,20 @@ document.getElementById("saleForm")
   date:new Date().toISOString()
  };
 
- // MISE A JOUR
+ const oldQuantity=product.quantity;
 
  sales.push(sale);
-
  product.quantity-=quantity;
+
+ if(!saveData()){
+
+  sales.pop();
+  product.quantity=oldQuantity;
+
+  status.textContent="Erreur de sauvegarde. Vente annulée.";
+  return;
+
+ }
 
  renderProducts();
  updateSaleOptions();
@@ -551,14 +768,15 @@ document.getElementById("saleForm")
  updateDashboard();
 
  this.reset();
-
  updateSaleTotal();
 
- status.textContent="Vente enregistrée avec succès !";
+ status.textContent="Vente enregistrée et sauvegardée !";
 
 });
 
-// HISTORIQUE DES VENTES
+// ==============================
+// HISTORIQUE
+// ==============================
 
 function renderHistory(){
 
@@ -566,8 +784,12 @@ function renderHistory(){
  list.innerHTML="";
 
  if(sales.length===0){
-  list.innerHTML='<div class="empty">Aucune vente enregistrée.</div>';
+
+  list.innerHTML=
+   '<div class="empty">Aucune vente enregistrée.</div>';
+
   return;
+
  }
 
  [...sales].reverse().forEach(s=>{
@@ -587,14 +809,15 @@ function renderHistory(){
    " | Bénéfice brut : "+money(s.profit);
 
   item.append(title,details);
-
   list.appendChild(item);
 
  });
 
 }
 
+// ==============================
 // TABLEAU DE BORD
+// ==============================
 
 function updateDashboard(){
 
@@ -615,7 +838,144 @@ function updateDashboard(){
 
 }
 
-// INITIALISATION
+// ==============================
+// EXPORTATION SAUVEGARDE
+// ==============================
+
+function exportBackup(){
+
+ if(!storageAvailable){
+  alert("Stockage indisponible. Exportation impossible.");
+  return;
+ }
+
+ const data={
+  version:1,
+  exportDate:new Date().toISOString(),
+  products:products,
+  sales:sales
+ };
+
+ const blob=new Blob(
+  [JSON.stringify(data,null,2)],
+  {type:"application/json"}
+ );
+
+ const url=URL.createObjectURL(blob);
+
+ const link=document.createElement("a");
+
+ link.href=url;
+ link.download="mboabiz-sauvegarde.json";
+
+ document.body.appendChild(link);
+ link.click();
+ link.remove();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+
+ document.getElementById("backupStatus").textContent=
+  "Sauvegarde préparée. Vérifie son téléchargement.";
+
+}
+
+// ==============================
+// IMPORTATION SAUVEGARDE
+// ==============================
+
+function importBackup(){
+
+ const input=document.getElementById("backupFile");
+ const status=document.getElementById("backupStatus");
+
+ if(!input.files || !input.files[0]){
+  status.textContent="Sélectionne d'abord un fichier JSON.";
+  return;
+ }
+
+ if(!storageAvailable){
+  status.textContent="Stockage indisponible. Restauration impossible.";
+  return;
+ }
+
+ const file=input.files[0];
+
+ if(file.size>5*1024*1024){
+  status.textContent="Fichier trop volumineux (maximum 5 Mo).";
+  return;
+ }
+
+ const reader=new FileReader();
+
+ reader.onload=function(){
+
+  try{
+
+   const data=JSON.parse(reader.result);
+
+   if(
+    !data ||
+    data.version!==1 ||
+    !Array.isArray(data.products) ||
+    !Array.isArray(data.sales) ||
+    !data.products.every(validProduct) ||
+    !data.sales.every(validSale)
+   ){
+    throw new Error("Fichier MboaBiz invalide.");
+   }
+
+   if(!confirm(
+    "Cette restauration remplacera tous les produits et ventes actuels. Continuer ?"
+   )){
+    return;
+   }
+
+   const oldProducts=products;
+   const oldSales=sales;
+
+   products=data.products;
+   sales=data.sales;
+
+   if(!saveData()){
+
+    products=oldProducts;
+    sales=oldSales;
+
+    status.textContent="Impossible de sauvegarder les données restaurées.";
+    return;
+
+   }
+
+   renderProducts();
+   updateSaleOptions();
+   renderHistory();
+   updateDashboard();
+
+   status.textContent="Restauration effectuée avec succès !";
+
+   input.value="";
+
+  }catch(error){
+
+   status.textContent="Erreur : "+error.message;
+
+  }
+
+ };
+
+ reader.onerror=function(){
+  status.textContent="Impossible de lire le fichier.";
+ };
+
+ reader.readAsText(file);
+
+}
+
+// ==============================
+// DEMARRAGE
+// ==============================
+
+loadData();
 
 renderProducts();
 updateSaleOptions();
