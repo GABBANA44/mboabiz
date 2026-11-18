@@ -5,175 +5,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#126B45">
-<title>MboaBiz 0.7</title>
+<title>MboaBiz 0.8</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
-body{
- font-family:Arial,sans-serif;
- background:#F4F7F5;
- color:#202B25;
- padding:18px;
- padding-bottom:40px;
-}
-
+body{font-family:Arial,sans-serif;background:#F4F7F5;color:#202B25;padding:18px;padding-bottom:40px}
 header{margin-bottom:22px}
 .logo{font-size:28px;font-weight:bold;color:#126B45}
 .subtitle{color:#777;margin-top:5px}
-
-.card,.product,.sale{
- background:white;
- padding:17px;
- border-radius:14px;
- margin-bottom:13px;
-}
-
-.stats{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:12px;
-}
-
-.stats h2{
- color:#126B45;
- font-size:19px;
- margin-top:10px;
-}
-
+.card,.product,.sale{background:white;padding:17px;border-radius:14px;margin-bottom:13px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stats h2{color:#126B45;font-size:19px;margin-top:10px}
 h3{margin:23px 0 13px}
-
-input,select,textarea{
- width:100%;
- padding:14px;
- margin:8px 0 14px;
- border:1px solid #ddd;
- border-radius:9px;
- font-size:16px;
- background:white;
- font-family:Arial,sans-serif;
-}
-
-textarea{
- min-height:100px;
- resize:vertical;
-}
-
-label{
- font-size:14px;
- font-weight:bold;
-}
-
-button{
- border:0;
- border-radius:10px;
- padding:14px;
- background:#126B45;
- color:white;
- font-weight:bold;
- font-size:15px;
- cursor:pointer;
-}
-
+input,select,textarea{width:100%;padding:14px;margin:8px 0 14px;border:1px solid #ddd;border-radius:9px;font-size:16px;background:white;font-family:Arial,sans-serif}
+textarea{min-height:100px;resize:vertical}
+label{font-size:14px;font-weight:bold}
+button{border:0;border-radius:10px;padding:14px;background:#126B45;color:white;font-weight:bold;font-size:15px;cursor:pointer}
 button:disabled{opacity:.5}
 .full{width:100%}
-
-.tabs{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:7px;
- margin:23px 0;
-}
-
-.tabs button{
- background:#ddd;
- color:#333;
- font-size:13px;
- padding:13px 5px;
-}
-
-.tabs button.active{
- background:#126B45;
- color:white;
-}
-
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:23px 0}
+.tabs button{background:#ddd;color:#333;font-size:13px;padding:13px 5px}
+.tabs button.active{background:#126B45;color:white}
 .section{display:none}
 .section.active{display:block}
-
-.product p,.sale p{
- color:#666;
- font-size:14px;
- margin-top:8px;
- line-height:1.6;
-}
-
-.product-image{
- display:block;
- width:100%;
- max-height:240px;
- object-fit:contain;
- background:#F4F7F5;
- border-radius:10px;
- margin:12px 0;
-}
-
-.delete{background:#C0392B;margin-top:12px}
+.product p,.sale p{color:#666;font-size:14px;margin-top:8px;line-height:1.6}
+.product-image{display:block;width:100%;max-height:240px;object-fit:contain;background:#F4F7F5;border-radius:10px;margin:12px 0}
+.delete,.danger{background:#C0392B;margin-top:12px}
 .secondary{background:#425466}
-.danger{background:#C0392B}
-
-.empty{
- text-align:center;
- color:#888;
- padding:22px;
-}
-
-.total-box{
- background:#E7F4EC;
- padding:16px;
- border-radius:10px;
- margin:12px 0;
-}
-
-.total-box strong{
- color:#126B45;
- font-size:23px;
-}
-
-.status{
- color:#126B45;
- font-size:14px;
- margin-top:10px;
- line-height:1.5;
-}
-
-.backup-box{
- background:#E7F4EC;
- padding:16px;
- border-radius:12px;
- margin-bottom:15px;
-}
-
-.backup-box p{
- font-size:14px;
- line-height:1.5;
- margin-top:8px;
-}
-
+.empty{text-align:center;color:#888;padding:22px}
+.total-box{background:#E7F4EC;padding:16px;border-radius:10px;margin:12px 0}
+.total-box strong{color:#126B45;font-size:23px}
+.status{color:#126B45;font-size:14px;margin-top:10px;line-height:1.5}
+.backup-box{background:#E7F4EC;padding:16px;border-radius:12px;margin-bottom:15px}
+.backup-box p{font-size:14px;line-height:1.5;margin-top:8px}
+.reminder{background:#FFF3D6;padding:13px;border-radius:10px;margin:12px 0;font-size:14px;line-height:1.5}
 #backupFile{font-size:13px}
-
-.preview-label{
- color:#666;
- font-size:13px;
- margin-top:-5px;
- margin-bottom:10px;
-}
-
-footer{
- text-align:center;
- color:#888;
- font-size:12px;
- margin-top:30px;
-}
+.preview-label{color:#666;font-size:13px;margin-top:-5px;margin-bottom:10px}
+footer{text-align:center;color:#888;font-size:12px;margin-top:30px}
 </style>
 </head>
 
@@ -182,9 +50,7 @@ footer{
 <header>
  <div class="logo">MboaBiz 🏪</div>
  <div class="subtitle">Ton commerce, mieux organisé.</div>
- <p style="color:#126B45;font-size:12px;margin-top:7px">
-  VERSION 0.7
- </p>
+ <p style="color:#126B45;font-size:12px;margin-top:7px">VERSION 0.8</p>
 </header>
 
 <div class="card" style="background:#126B45;color:white">
@@ -195,121 +61,76 @@ footer{
 <h3>Tableau de bord</h3>
 
 <div class="stats">
- <div class="card">
-  📦 Produits
-  <h2 id="productCount">0</h2>
- </div>
-
- <div class="card">
-  🛒 Ventes
-  <h2 id="saleCount">0</h2>
- </div>
-
- <div class="card">
-  💰 Bénéfice brut
-  <h2 id="profit">0 FCFA</h2>
- </div>
-
- <div class="card">
-  ⚠️ Stock faible
-  <h2 id="lowStock">0</h2>
- </div>
+ <div class="card">📦 Produits<h2 id="productCount">0</h2></div>
+ <div class="card">🛒 Ventes<h2 id="saleCount">0</h2></div>
+ <div class="card">💰 Bénéfice brut<h2 id="profit">0 FCFA</h2></div>
+ <div class="card">⚠️ Stock faible<h2 id="lowStock">0</h2></div>
 </div>
 
 <div class="tabs">
- <button class="active"
- onclick="showSection('products',this)">
-  Produits
- </button>
-
- <button onclick="showSection('sales',this)">
-  Ventes
- </button>
-
- <button onclick="showSection('history',this)">
-  Historique
- </button>
+ <button class="active" onclick="showSection('products',this)">Produits</button>
+ <button onclick="showSection('sales',this)">Ventes</button>
+ <button onclick="showSection('history',this)">Historique</button>
 </div>
 
 <!-- PRODUITS -->
 
 <div id="products" class="section active">
-
  <h3>Ajouter un produit</h3>
 
  <div class="card">
   <form id="productForm">
-
    <label>Nom du produit</label>
-   <input id="name" required
-    maxlength="100" placeholder="Ex : T-shirt">
+   <input id="name" required maxlength="100" placeholder="Ex : T-shirt">
 
    <label>Description du produit</label>
-   <textarea id="description" maxlength="1000"
-    placeholder="Décris ton produit, sa marque, son état..."></textarea>
+   <textarea id="description" maxlength="1000" placeholder="Décris ton produit, sa marque, son état..."></textarea>
 
    <label>Photo du produit</label>
-   <input id="productPhoto" type="file"
-    accept="image/jpeg,image/png,image/webp,image/gif">
+   <input id="productPhoto" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
 
-   <p class="preview-label">
-    La photo sera automatiquement réduite pour économiser le stockage.
-   </p>
+   <p class="preview-label">La photo sera automatiquement réduite pour économiser le stockage.</p>
 
    <label>Prix d'achat (FCFA)</label>
-   <input id="buyPrice" type="number"
-    min="0" step="1" required>
+   <input id="buyPrice" type="number" min="0" step="1" required>
 
    <label>Prix de vente (FCFA)</label>
-   <input id="sellPrice" type="number"
-    min="0" step="1" required>
+   <input id="sellPrice" type="number" min="0" step="1" required>
 
    <label>Quantité disponible</label>
-   <input id="quantity" type="number"
-    min="0" step="1" required>
+   <input id="quantity" type="number" min="0" step="1" required>
 
-   <button class="full" type="submit">
-    ENREGISTRER LE PRODUIT
-   </button>
-
+   <button class="full" type="submit">ENREGISTRER LE PRODUIT</button>
   </form>
-
   <p id="productStatus" class="status"></p>
  </div>
 
  <h3>Mon catalogue</h3>
  <div id="productList"></div>
-
 </div>
 
 <!-- VENTES -->
 
 <div id="sales" class="section">
-
  <h3>Nouvelle vente</h3>
 
  <div class="card">
   <form id="saleForm">
-
    <label>Choisir un produit</label>
    <select id="saleProduct" required>
     <option value="">Sélectionner un produit</option>
    </select>
 
    <label>Quantité à vendre</label>
-   <input id="saleQuantity" type="number"
-    min="1" step="1" value="1" required>
+   <input id="saleQuantity" type="number" min="1" step="1" value="1" required>
 
    <div class="total-box">
     <p>Total à payer</p>
     <strong id="saleTotal">0 FCFA</strong>
    </div>
 
-   <button class="full" type="submit">
-    CONFIRMER LA VENTE
-   </button>
+   <button class="full" type="submit">CONFIRMER LA VENTE</button>
   </form>
-
   <p id="saleStatus" class="status"></p>
  </div>
 </div>
@@ -326,92 +147,67 @@ footer{
 <h3>Sauvegarde et données</h3>
 
 <div class="card">
-
  <div class="backup-box">
   <strong>💾 Sauvegarde automatique</strong>
-  <p id="storageStatus">
-   Vérification du stockage...
-  </p>
+  <p id="storageStatus">Vérification du stockage...</p>
  </div>
 
- <button class="full" onclick="exportBackup()">
-  TÉLÉCHARGER MA SAUVEGARDE
- </button>
+ <div id="backupReminder" class="reminder">
+  Vérification de la dernière sauvegarde externe...
+ </div>
+
+ <button class="full" onclick="exportBackup()">TÉLÉCHARGER MA SAUVEGARDE</button>
 
  <h3>Restaurer une sauvegarde</h3>
 
  <p style="font-size:14px;color:#666;line-height:1.5">
   Sélectionne un fichier de sauvegarde MboaBiz au format JSON.
-  La restauration remplacera les données actuelles.
+  Les données actuelles seront remplacées uniquement si le fichier est valide
+  et si son enregistrement réussit.
  </p>
 
- <input id="backupFile" type="file"
-  accept=".json,application/json">
+ <input id="backupFile" type="file" accept=".json,application/json">
 
- <button class="full secondary" onclick="importBackup()">
-  RESTAURER MES DONNÉES
- </button>
+ <button class="full secondary" onclick="importBackup()">RESTAURER MES DONNÉES</button>
 
  <p id="backupStatus" class="status"></p>
 </div>
 
-<footer>
- MboaBiz 0.7 - Gestion commerciale au Cameroun 🇨🇲
-</footer>
+<footer>MboaBiz 0.8 - Gestion commerciale au Cameroun 🇨🇲</footer>
 
 <script>
 
 // =================================
-// STOCKAGE
+// CONFIGURATION DU STOCKAGE
 // =================================
 
-// IMPORTANT : même clé que la version 0.6
-// pour conserver les anciennes données.
+// Même clé que les versions précédentes.
+// Ne pas la modifier : elle permet de retrouver les anciennes données.
 
 const STORAGE_KEY="mboabiz_v06_data";
+const LAST_EXPORT_KEY="mboabiz_v08_last_export";
 
 let products=[];
 let sales=[];
 let storageAvailable=false;
 
 // =================================
-// SAUVEGARDE
+// OUTILS
 // =================================
 
-function saveData(){
+function money(value){
+ return Math.round(value).toLocaleString("fr-FR")+" FCFA";
+}
 
- try{
+function showSection(id,button){
+ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
 
-  const data={
-   version:1,
-   products:products,
-   sales:sales
-  };
+ document.getElementById(id).classList.add("active");
+ button.classList.add("active");
 
-  localStorage.setItem(
-   STORAGE_KEY,
-   JSON.stringify(data)
-  );
-
-  storageAvailable=true;
-
-  document.getElementById("storageStatus").textContent=
-   "Sauvegarde automatique active sur cet appareil.";
-
-  return true;
-
- }catch(error){
-
-  storageAvailable=false;
-
-  document.getElementById("storageStatus").textContent=
-   "Erreur de sauvegarde : "+error.message+
-   ". Télécharge une sauvegarde et réduis les photos.";
-
-  return false;
-
- }
-
+ if(id==="sales")updateSaleOptions();
+ if(id==="history")renderHistory();
 }
 
 // =================================
@@ -419,8 +215,7 @@ function saveData(){
 // =================================
 
 function validProduct(p){
-
- return p &&
+ return !!p &&
  typeof p.name==="string" &&
  p.name.trim().length>0 &&
  Number.isSafeInteger(p.buyPrice) &&
@@ -432,12 +227,10 @@ function validProduct(p){
  (typeof p.id==="number" || typeof p.id==="string") &&
  (p.description===undefined || typeof p.description==="string") &&
  (p.photo===undefined || p.photo===null || typeof p.photo==="string");
-
 }
 
 function validSale(s){
-
- return s &&
+ return !!s &&
  typeof s.productName==="string" &&
  Number.isSafeInteger(s.quantity) &&
  Number.isSafeInteger(s.unitPrice) &&
@@ -451,8 +244,58 @@ function validSale(s){
  s.total===s.unitPrice*s.quantity &&
  s.cost===s.unitCost*s.quantity &&
  s.profit===s.total-s.cost &&
- typeof s.date==="string";
+ typeof s.date==="string" &&
+ !Number.isNaN(Date.parse(s.date));
+}
 
+function validBackup(data){
+ return !!data &&
+ data.version===1 &&
+ Array.isArray(data.products) &&
+ Array.isArray(data.sales) &&
+ data.products.every(validProduct) &&
+ data.sales.every(validSale);
+}
+
+// =================================
+// SAUVEGARDE AUTOMATIQUE
+// =================================
+
+function saveData(){
+ try{
+  const data={
+   version:1,
+   products:products,
+   sales:sales
+  };
+
+  const serialized=JSON.stringify(data);
+
+  localStorage.setItem(STORAGE_KEY,serialized);
+
+  // Vérification de l'enregistrement.
+  const verification=localStorage.getItem(STORAGE_KEY);
+
+  if(verification!==serialized){
+   throw new Error("La vérification de sauvegarde a échoué.");
+  }
+
+  storageAvailable=true;
+
+  document.getElementById("storageStatus").textContent=
+   "Sauvegarde automatique active. Dernière modification enregistrée.";
+
+  return true;
+
+ }catch(error){
+  storageAvailable=false;
+
+  document.getElementById("storageStatus").textContent=
+   "Erreur de sauvegarde : "+error.message+
+   ". Télécharge une sauvegarde et vérifie l'espace disponible.";
+
+  return false;
+ }
 }
 
 // =================================
@@ -460,81 +303,86 @@ function validSale(s){
 // =================================
 
 function loadData(){
-
  try{
-
   const raw=localStorage.getItem(STORAGE_KEY);
 
   if(!raw){
-
    products=[];
    sales=[];
    storageAvailable=true;
-   saveData();
-   return;
 
+   if(!saveData()){
+    throw new Error("Impossible de créer le stockage initial.");
+   }
+
+   return;
   }
 
   const data=JSON.parse(raw);
 
-  if(
-   !data ||
-   data.version!==1 ||
-   !Array.isArray(data.products) ||
-   !Array.isArray(data.sales) ||
-   !data.products.every(validProduct) ||
-   !data.sales.every(validSale)
-  ){
-
+  if(!validBackup(data)){
    throw new Error("Format de sauvegarde invalide.");
-
   }
 
   products=data.products;
   sales=data.sales;
   storageAvailable=true;
 
- }catch(error){
+  document.getElementById("storageStatus").textContent=
+   "Données chargées. Sauvegarde automatique active.";
 
+ }catch(error){
   products=[];
   sales=[];
   storageAvailable=false;
 
   document.getElementById("storageStatus").textContent=
-   "Impossible de charger les données : "+
-   error.message+
+   "Impossible de charger les données : "+error.message+
    ". Ne saisis rien avant vérification.";
-
  }
-
 }
 
 // =================================
-// OUTILS
+// RAPPEL DE SAUVEGARDE EXTERNE
 // =================================
 
-function money(value){
+function updateBackupReminder(){
+ const reminder=document.getElementById("backupReminder");
 
- return Math.round(value).toLocaleString("fr-FR")+" FCFA";
+ try{
+  const lastExport=localStorage.getItem(LAST_EXPORT_KEY);
 
-}
+  if(!lastExport){
+   reminder.textContent=
+    "⚠️ Aucune sauvegarde externe enregistrée par cette version. Télécharge une sauvegarde pour protéger tes données.";
+   return;
+  }
 
-function showSection(id,button){
+  const date=Number(lastExport);
 
- document.querySelectorAll(".section").forEach(s=>{
-  s.classList.remove("active");
- });
+  if(!Number.isFinite(date) || date<=0){
+   reminder.textContent=
+    "⚠️ Date de sauvegarde inconnue. Pense à télécharger une nouvelle copie.";
+   return;
+  }
 
- document.querySelectorAll(".tabs button").forEach(b=>{
-  b.classList.remove("active");
- });
+  const days=Math.floor((Date.now()-date)/86400000);
 
- document.getElementById(id).classList.add("active");
- button.classList.add("active");
+  if(days>=7){
+   reminder.textContent=
+    "⚠️ Ta dernière exportation date de "+days+
+    " jours. Pense à télécharger une nouvelle sauvegarde.";
+  }else{
+   reminder.textContent=
+    "✅ Dernière exportation enregistrée : "+
+    new Date(date).toLocaleDateString("fr-FR")+
+    ". Pense à conserver ton fichier dans un endroit sûr.";
+  }
 
- if(id==="sales")updateSaleOptions();
- if(id==="history")renderHistory();
-
+ }catch(error){
+  reminder.textContent=
+   "Pense à télécharger régulièrement une sauvegarde externe.";
+ }
 }
 
 // =================================
@@ -542,9 +390,7 @@ function showSection(id,button){
 // =================================
 
 function compressImage(file){
-
  return new Promise((resolve,reject)=>{
-
   if(!file){
    resolve("");
    return;
@@ -563,28 +409,21 @@ function compressImage(file){
   const reader=new FileReader();
 
   reader.onload=function(){
-
    const img=new Image();
 
    img.onload=function(){
-
     const canvas=document.createElement("canvas");
-
     const maxSize=800;
 
     let width=img.width;
     let height=img.height;
 
     if(width>height && width>maxSize){
-
      height=Math.round(height*maxSize/width);
      width=maxSize;
-
     }else if(height>maxSize){
-
      width=Math.round(width*maxSize/height);
      height=maxSize;
-
     }
 
     canvas.width=width;
@@ -592,28 +431,27 @@ function compressImage(file){
 
     const ctx=canvas.getContext("2d");
 
+    if(!ctx){
+     reject(new Error("Compression d'image indisponible."));
+     return;
+    }
+
     ctx.drawImage(img,0,0,width,height);
 
-    resolve(canvas.toDataURL("image/jpeg",0.65));
-
+    try{
+     resolve(canvas.toDataURL("image/jpeg",0.65));
+    }catch(error){
+     reject(new Error("Impossible de compresser cette image."));
+    }
    };
 
-   img.onerror=()=>{
-    reject(new Error("Image illisible."));
-   };
-
+   img.onerror=()=>reject(new Error("Image illisible."));
    img.src=reader.result;
-
   };
 
-  reader.onerror=()=>{
-   reject(new Error("Lecture de la photo impossible."));
-  };
-
+  reader.onerror=()=>reject(new Error("Lecture de la photo impossible."));
   reader.readAsDataURL(file);
-
  });
-
 }
 
 // =================================
@@ -622,17 +460,14 @@ function compressImage(file){
 
 document.getElementById("productForm")
 .addEventListener("submit",async function(e){
-
  e.preventDefault();
 
  const status=document.getElementById("productStatus");
  const button=this.querySelector('button[type="submit"]');
 
  if(!storageAvailable){
-
   status.textContent="Stockage indisponible.";
   return;
-
  }
 
  const name=document.getElementById("name").value.trim();
@@ -644,24 +479,19 @@ document.getElementById("productForm")
 
  const photoFile=document.getElementById("productPhoto").files[0];
 
- if(
-  !name ||
-  !Number.isSafeInteger(buy) ||
-  !Number.isSafeInteger(sell) ||
-  !Number.isSafeInteger(quantity) ||
-  buy<0 || sell<0 || quantity<0
- ){
-
+ if(!name ||
+ !Number.isSafeInteger(buy) ||
+ !Number.isSafeInteger(sell) ||
+ !Number.isSafeInteger(quantity) ||
+ buy<0 || sell<0 || quantity<0){
   status.textContent="Vérifie les informations saisies.";
   return;
-
  }
 
  button.disabled=true;
  status.textContent="Préparation du produit...";
 
  try{
-
   const photo=await compressImage(photoFile);
 
   const product={
@@ -677,34 +507,22 @@ document.getElementById("productForm")
   products.push(product);
 
   if(!saveData()){
-
    products.pop();
-
-   status.textContent=
-    "Stockage insuffisant. Produit non enregistré.";
-
+   status.textContent="Stockage insuffisant. Produit non enregistré.";
    return;
-
   }
 
   renderProducts();
   updateSaleOptions();
-
   this.reset();
 
-  status.textContent=
-   "Produit enregistré avec succès !";
+  status.textContent="Produit enregistré avec succès !";
 
  }catch(error){
-
   status.textContent="Erreur : "+error.message;
-
  }finally{
-
   button.disabled=false;
-
  }
-
 });
 
 // =================================
@@ -712,34 +530,27 @@ document.getElementById("productForm")
 // =================================
 
 function deleteProduct(id){
-
  if(!storageAvailable)return;
 
  const used=sales.some(s=>s.productId===id);
 
  if(used){
-
   alert("Impossible de supprimer un produit ayant des ventes.");
   return;
-
  }
 
  if(!confirm("Supprimer ce produit ?"))return;
 
  const oldProducts=products;
-
  products=products.filter(p=>p.id!==id);
 
  if(!saveData()){
-
   products=oldProducts;
   alert("Suppression non sauvegardée.");
-
  }
 
  renderProducts();
  updateSaleOptions();
-
 }
 
 // =================================
@@ -747,72 +558,51 @@ function deleteProduct(id){
 // =================================
 
 function renderProducts(){
-
  const list=document.getElementById("productList");
-
  list.innerHTML="";
 
  if(products.length===0){
-
-  list.innerHTML=
-   '<div class="empty">Aucun produit enregistré.</div>';
-
+  list.innerHTML='<div class="empty">Aucun produit enregistré.</div>';
  }
 
  products.forEach(p=>{
-
   const item=document.createElement("div");
   item.className="product";
 
   if(p.photo){
-
    const image=document.createElement("img");
-
    image.src=p.photo;
    image.className="product-image";
    image.alt=p.name;
-
    item.appendChild(image);
-
   }
 
   const title=document.createElement("strong");
-
   title.textContent=p.name;
-
   item.appendChild(title);
 
   if(p.description){
-
    const description=document.createElement("p");
-
    description.textContent=p.description;
-
    item.appendChild(description);
-
   }
 
   const details=document.createElement("p");
-
   details.textContent=
    "Achat : "+money(p.buyPrice)+
    " | Vente : "+money(p.sellPrice)+
    " | Stock : "+p.quantity;
 
   const button=document.createElement("button");
-
   button.className="delete";
   button.textContent="Supprimer";
   button.onclick=()=>deleteProduct(p.id);
 
   item.append(details,button);
-
   list.appendChild(item);
-
  });
 
  updateDashboard();
-
 }
 
 // =================================
@@ -820,7 +610,6 @@ function renderProducts(){
 // =================================
 
 function updateSaleOptions(){
-
  const select=document.getElementById("saleProduct");
  const previous=select.value;
 
@@ -828,27 +617,19 @@ function updateSaleOptions(){
   '<option value="">Sélectionner un produit</option>';
 
  products.filter(p=>p.quantity>0).forEach(p=>{
-
   const option=document.createElement("option");
-
   option.value=String(p.id);
-
   option.textContent=
    p.name+" - "+money(p.sellPrice)+
    " (Stock : "+p.quantity+")";
-
   select.appendChild(option);
-
  });
 
  if(products.some(p=>String(p.id)===previous && p.quantity>0)){
-
   select.value=previous;
-
  }
 
  updateSaleTotal();
-
 }
 
 // =================================
@@ -856,31 +637,20 @@ function updateSaleOptions(){
 // =================================
 
 function updateSaleTotal(){
-
  const id=document.getElementById("saleProduct").value;
-
- const quantity=Number(
-  document.getElementById("saleQuantity").value
- );
-
+ const quantity=Number(document.getElementById("saleQuantity").value);
  const product=products.find(p=>String(p.id)===id);
 
  let total=0;
 
- if(
-  product &&
-  Number.isSafeInteger(quantity) &&
-  quantity>0 &&
-  quantity<=product.quantity
- ){
-
+ if(product &&
+ Number.isSafeInteger(quantity) &&
+ quantity>0 &&
+ quantity<=product.quantity){
   total=product.sellPrice*quantity;
-
  }
 
- document.getElementById("saleTotal").textContent=
-  money(total);
-
+ document.getElementById("saleTotal").textContent=money(total);
 }
 
 document.getElementById("saleProduct")
@@ -895,57 +665,43 @@ document.getElementById("saleQuantity")
 
 document.getElementById("saleForm")
 .addEventListener("submit",function(e){
-
  e.preventDefault();
 
  const status=document.getElementById("saleStatus");
 
  if(!storageAvailable){
-
   status.textContent="Stockage indisponible. Vente non enregistrée.";
   return;
-
  }
 
  const id=this.elements.saleProduct.value;
-
  const quantity=Number(this.elements.saleQuantity.value);
-
  const product=products.find(p=>String(p.id)===id);
 
  if(!product){
-
   status.textContent="Sélectionne un produit.";
   return;
-
  }
 
  if(!Number.isSafeInteger(quantity)||quantity<1){
-
   status.textContent="Quantité invalide.";
   return;
-
  }
 
  if(quantity>product.quantity){
-
   status.textContent="Stock insuffisant !";
   return;
-
  }
 
  const total=product.sellPrice*quantity;
  const cost=product.buyPrice*quantity;
 
  if(!Number.isSafeInteger(total)||!Number.isSafeInteger(cost)){
-
   status.textContent="Montant trop élevé.";
   return;
-
  }
 
  const sale={
-
   id:Date.now()+Math.random(),
   productId:product.id,
   productName:product.name,
@@ -956,7 +712,6 @@ document.getElementById("saleForm")
   cost:cost,
   profit:total-cost,
   date:new Date().toISOString()
-
  };
 
  const oldQuantity=product.quantity;
@@ -965,13 +720,10 @@ document.getElementById("saleForm")
  product.quantity-=quantity;
 
  if(!saveData()){
-
   sales.pop();
   product.quantity=oldQuantity;
-
   status.textContent="Erreur de sauvegarde. Vente annulée.";
   return;
-
  }
 
  renderProducts();
@@ -980,11 +732,9 @@ document.getElementById("saleForm")
  updateDashboard();
 
  this.reset();
-
  updateSaleTotal();
 
  status.textContent="Vente enregistrée et sauvegardée !";
-
 });
 
 // =================================
@@ -992,43 +742,30 @@ document.getElementById("saleForm")
 // =================================
 
 function renderHistory(){
-
  const list=document.getElementById("saleHistory");
-
  list.innerHTML="";
 
  if(sales.length===0){
-
-  list.innerHTML=
-   '<div class="empty">Aucune vente enregistrée.</div>';
-
+  list.innerHTML='<div class="empty">Aucune vente enregistrée.</div>';
   return;
-
  }
 
  [...sales].reverse().forEach(s=>{
-
   const item=document.createElement("div");
-
   item.className="sale";
 
   const title=document.createElement("strong");
-
   title.textContent=s.productName+" × "+s.quantity;
 
   const details=document.createElement("p");
-
   details.textContent=
    new Date(s.date).toLocaleString("fr-FR")+
    " | Total : "+money(s.total)+
    " | Bénéfice brut : "+money(s.profit);
 
   item.append(title,details);
-
   list.appendChild(item);
-
  });
-
 }
 
 // =================================
@@ -1036,26 +773,15 @@ function renderHistory(){
 // =================================
 
 function updateDashboard(){
-
  const revenue=sales.reduce((sum,s)=>sum+s.total,0);
-
  const profit=sales.reduce((sum,s)=>sum+s.profit,0);
 
- document.getElementById("revenue").textContent=
-  money(revenue);
-
- document.getElementById("productCount").textContent=
-  products.length;
-
- document.getElementById("saleCount").textContent=
-  sales.length;
-
- document.getElementById("profit").textContent=
-  money(profit);
-
+ document.getElementById("revenue").textContent=money(revenue);
+ document.getElementById("productCount").textContent=products.length;
+ document.getElementById("saleCount").textContent=sales.length;
+ document.getElementById("profit").textContent=money(profit);
  document.getElementById("lowStock").textContent=
   products.filter(p=>p.quantity<=5).length;
-
 }
 
 // =================================
@@ -1063,171 +789,154 @@ function updateDashboard(){
 // =================================
 
 function exportBackup(){
-
  if(!storageAvailable){
-
   alert("Stockage indisponible. Exportation impossible.");
   return;
-
  }
 
- const data={
+ try{
+  const data={
+   app:"MboaBiz",
+   version:1,
+   exportDate:new Date().toISOString(),
+   products:products,
+   sales:sales
+  };
 
-  version:1,
-  exportDate:new Date().toISOString(),
-  products:products,
-  sales:sales
+  const blob=new Blob(
+   [JSON.stringify(data,null,2)],
+   {type:"application/json"}
+  );
 
- };
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
 
- const blob=new Blob(
+  const date=new Date().toISOString().slice(0,10);
 
-  [JSON.stringify(data,null,2)],
+  link.href=url;
+  link.download="MboaBiz_Sauvegarde_"+date+".json";
 
-  {type:"application/json"}
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 
- );
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
 
- const url=URL.createObjectURL(blob);
+  // Enregistrer la date de cette exportation.
+  try{
+   localStorage.setItem(LAST_EXPORT_KEY,String(Date.now()));
+  }catch(error){}
 
- const link=document.createElement("a");
+  updateBackupReminder();
 
- link.href=url;
- link.download="mboabiz-sauvegarde.json";
+  document.getElementById("backupStatus").textContent=
+   "Exportation préparée. Vérifie que le fichier est bien enregistré dans Fichiers.";
 
- document.body.appendChild(link);
-
- link.click();
-
- link.remove();
-
- setTimeout(()=>URL.revokeObjectURL(url),1000);
-
- document.getElementById("backupStatus").textContent=
-  "Sauvegarde préparée. Vérifie son téléchargement.";
-
+ }catch(error){
+  document.getElementById("backupStatus").textContent=
+   "Erreur pendant l'exportation : "+error.message;
+ }
 }
 
 // =================================
-// RESTAURER LES DONNEES
+// RESTAURATION SECURISEE
 // =================================
 
 function importBackup(){
-
  const input=document.getElementById("backupFile");
-
  const status=document.getElementById("backupStatus");
 
  if(!input.files || !input.files[0]){
-
   status.textContent="Sélectionne d'abord un fichier JSON.";
   return;
-
  }
 
  if(!storageAvailable){
-
   status.textContent="Stockage indisponible. Restauration impossible.";
   return;
-
  }
 
  const file=input.files[0];
 
  if(file.size>15*1024*1024){
-
   status.textContent="Fichier trop volumineux (maximum 15 Mo).";
   return;
-
  }
 
  const reader=new FileReader();
 
  reader.onload=function(){
-
   try{
-
    const data=JSON.parse(reader.result);
 
-   if(
-    !data ||
-    data.version!==1 ||
-    !Array.isArray(data.products) ||
-    !Array.isArray(data.sales) ||
-    !data.products.every(validProduct) ||
-    !data.sales.every(validSale)
-   ){
-
-    throw new Error("Fichier MboaBiz invalide.");
-
+   // Première sécurité : vérifier le contenu.
+   if(!validBackup(data)){
+    throw new Error("Fichier MboaBiz invalide ou incomplet.");
    }
 
    if(!confirm(
-    "Cette restauration remplacera tous les produits et ventes actuels. Continuer ?"
+    "ATTENTION : cette restauration remplacera les produits et ventes actuels. Vérifie que tu possèdes une sauvegarde récente avant de continuer. Restaurer maintenant ?"
    )){
-
+    status.textContent="Restauration annulée. Tes données actuelles sont conservées.";
     return;
-
    }
 
-   const oldProducts=products;
-   const oldSales=sales;
+   // Préparer les nouvelles données sans modifier les anciennes.
+   const newProducts=data.products;
+   const newSales=data.sales;
 
-   products=data.products;
-   sales=data.sales;
+   const newData={
+    version:1,
+    products:newProducts,
+    sales:newSales
+   };
 
-   if(!saveData()){
+   const serialized=JSON.stringify(newData);
 
-    products=oldProducts;
-    sales=oldSales;
+   // Enregistrer d'abord. Si cela échoue, les anciennes données
+   // restent en place et les tableaux actuels ne sont pas modifiés.
+   try{
+    localStorage.setItem(STORAGE_KEY,serialized);
 
-    // Rétablir les anciennes données si la sauvegarde échoue.
-    try{
+    if(localStorage.getItem(STORAGE_KEY)!==serialized){
+     throw new Error("La vérification de la restauration a échoué.");
+    }
 
-     localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({
-       version:1,
-       products:oldProducts,
-       sales:oldSales
-      })
-     );
-
-    }catch(error){}
-
-    status.textContent=
-     "Impossible de sauvegarder les données restaurées.";
-
-    return;
-
+   }catch(storageError){
+    throw new Error(
+     "Enregistrement impossible : "+storageError.message+
+     ". Les données actuelles sont conservées."
+    );
    }
+
+   // Ne remplacer les données en mémoire qu'après succès.
+   products=newProducts;
+   sales=newSales;
+   storageAvailable=true;
 
    renderProducts();
    updateSaleOptions();
    renderHistory();
    updateDashboard();
 
+   document.getElementById("storageStatus").textContent=
+    "Restauration réussie. Sauvegarde automatique active.";
+
    status.textContent=
-    "Restauration effectuée avec succès !";
+    "✅ Restauration effectuée avec succès !";
 
    input.value="";
 
   }catch(error){
-
    status.textContent="Erreur : "+error.message;
-
   }
-
  };
 
  reader.onerror=function(){
-
   status.textContent="Impossible de lire le fichier.";
-
  };
 
  reader.readAsText(file);
-
 }
 
 // =================================
@@ -1240,8 +949,8 @@ renderProducts();
 updateSaleOptions();
 renderHistory();
 updateDashboard();
+updateBackupReminder();
 
 </script>
-
 </body>
 </html>
